@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightPlanner.Handlers;
+using Microsoft.AspNetCore.Authentication;
 
 namespace FlightPlannerWebAPI
 {
@@ -27,6 +29,8 @@ namespace FlightPlannerWebAPI
         {
 
             services.AddControllers();
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlightPlannerWebAPI", Version = "v1" });
@@ -44,7 +48,7 @@ namespace FlightPlannerWebAPI
             }
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
