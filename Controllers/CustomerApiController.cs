@@ -27,7 +27,7 @@ namespace FlightPlannerWebAPI.Controllers
             if (FlightStorage.InvalidFlightValues(search))
                 return BadRequest();
 
-            return Ok(FlightStorage.SearchFlight(search));
+            return Ok(FlightStorage.SearchFlight());
         }
 
         [HttpGet]

@@ -117,14 +117,12 @@ namespace FlightPlannerWebAPI.Storage
             }
         }
 
-        public static PageResult SearchFlight(SearchFlightRequest searchFlightRequest)
+        public static PageResult SearchFlight()
         {
-            List<Flight> flight = _flights.
-                Where(f => f.From.AirportName == searchFlightRequest.From ||
-                              f.To.AirportName == searchFlightRequest.To ||
-                              f.DepartureTime == searchFlightRequest.DepartureDate).ToList();
-
-            return new PageResult(flight);
+            lock (_locker)
+            {
+                return new PageResult(_flights);
+            }
         }
     }
 }

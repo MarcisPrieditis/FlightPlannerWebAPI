@@ -17,14 +17,11 @@ namespace FlightPlannerWebAPI.Controllers
         [Route("flights/{id}")]
         public IActionResult GetFlights(int id)
         {
-            lock (_locker)
-            {
-                var flight = FlightStorage.GetFlight(id);
-                if (flight == null)
-                    return NotFound();
+            var flight = FlightStorage.GetFlight(id);
+            if (flight == null)
+                return NotFound();
 
-                return Ok(flight);
-            }
+            return Ok(flight);
         }
 
         [HttpPut]
