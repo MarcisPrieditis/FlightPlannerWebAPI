@@ -17,12 +17,12 @@ namespace FlightPlannerWebAPI.Storage
             {
                 var flight = new Flight
                 {
+                    Id = ++_id,
                     From = request.From,
                     To = request.To,
                     Carrier = request.Carrier,
                     DepartureTime = request.DepartureTime,
-                    ArrivalTime = request.ArrivalTime,
-                    Id = ++_id
+                    ArrivalTime = request.ArrivalTime
                 };
                 _flights.Add(flight);
 
