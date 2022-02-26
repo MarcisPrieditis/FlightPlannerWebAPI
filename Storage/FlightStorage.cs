@@ -7,82 +7,36 @@ namespace FlightPlannerWebAPI.Storage
 {
     public static class FlightStorage
     {
-        private static List<Flight> _flights = new();
-        private static int _id = 0;
         private static readonly object _locker = new();
 
-        public static Flight AddFlight(AddFlightRequest request)
+        public static Flight ConvertToFlight(AddFlightRequest request)
         {
-            lock (_locker)
+            var flight = new Flight
             {
-                var flight = new Flight
-                {
-                    Id = ++_id,
-                    From = request.From,
-                    To = request.To,
-                    Carrier = request.Carrier,
-                    DepartureTime = request.DepartureTime,
-                    ArrivalTime = request.ArrivalTime
-                };
-                _flights.Add(flight);
-
-                return flight;
-            }
+                From = request.From,
+                To = request.To,
+                Carrier = request.Carrier,
+                DepartureTime = request.DepartureTime,
+                ArrivalTime = request.ArrivalTime
+            };
+            return flight;
         }
 
-        public static Flight GetFlight(int id)
-        {
-            lock (_locker)
-            {
-                return _flights.SingleOrDefault(f => f.Id == id);
-            }
-        }
-
-        public static void DeleteFlight(int id)
-        {
-            lock (_locker)
-            {
-                var flight = GetFlight(id);
-
-                if (flight != null)
-                    _flights.Remove(flight);
-            }
-        }
-
-        public static List<Airport> FindAirports(string userInput)
+        public static List<Airport> FindAirports(string userInput, FlightPlannerDbContext context)
         {
             lock (_locker)
             {
                 userInput = userInput.ToLower().Trim();
 
-                var fromAirport = _flights.Where(f => f.From.AirportName.ToLower().Trim().Contains(userInput) ||
-                                                      f.From.City.ToLower().Trim().Contains(userInput) ||
-                                                      f.From.Country.ToLower().Trim().Contains(userInput)).Select(f => f.From).ToList();
+                var fromAirport = context.Flights.Where(f => f.From.AirportName.ToLower().Trim().Contains(userInput) ||
+                                                             f.From.City.ToLower().Trim().Contains(userInput) ||
+                                                             f.From.Country.ToLower().Trim().Contains(userInput)).Select(f => f.From).ToList();
 
-                var toAirport = _flights.Where(f => f.To.AirportName.ToLower().Trim().Contains(userInput) ||
-                                                    f.To.City.ToLower().Trim().Contains(userInput) ||
-                                                    f.To.Country.ToLower().Trim().Contains(userInput)).Select(f => f.To).ToList();
+                var toAirport = context.Flights.Where(f => f.To.AirportName.ToLower().Trim().Contains(userInput) ||
+                                                           f.To.City.ToLower().Trim().Contains(userInput) ||
+                                                           f.To.Country.ToLower().Trim().Contains(userInput)).Select(f => f.To).ToList();
 
                 return fromAirport.Concat(toAirport).ToList();
-            }
-        }
-
-        public static void ClearFlights()
-        {
-            _flights.Clear();
-            _id = 0;
-        }
-
-        public static bool CheckIfExist(AddFlightRequest flight)
-        {
-            lock (_locker)
-            {
-                return _flights.Any(f =>
-                    f.From.AirportName.ToLower().Trim() == flight.From.AirportName.ToLower().Trim() &&
-                    f.To.AirportName.ToLower().Trim() == flight.To.AirportName.ToLower().Trim() &&
-                    f.Carrier.ToLower().Trim() == flight.Carrier.ToLower().Trim() &&
-                    f.DepartureTime == flight.DepartureTime &&
-                    f.ArrivalTime == flight.ArrivalTime);
             }
         }
 
@@ -117,12 +71,18 @@ namespace FlightPlannerWebAPI.Storage
             }
         }
 
-        public static PageResult SearchFlight()
+        public static PageResult SearchFlight(SearchFlightRequest request, FlightPlannerDbContext context)
         {
             lock (_locker)
             {
-                return new PageResult(_flights);
+                var search = context.Flights.Where(f =>
+                    f.From.AirportName.ToLower().Trim() == request.From.ToLower().Trim() &&
+                    f.To.AirportName.ToLower().Trim() == request.To.ToLower().Trim() &&
+                    f.DepartureTime.Substring(0, 10) == request.DepartureDate).ToList();
+
+                return new PageResult(search);
             }
         }
     }
 }
+
