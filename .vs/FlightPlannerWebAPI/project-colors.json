@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "9042e9a1-bbc4-45b1-9157-a445ff6c06b9": {
+      "ProjectGuid": "9042e9a1-bbc4-45b1-9157-a445ff6c06b9",
+      "DisplayName": "FlightPlannerWebAPI",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
