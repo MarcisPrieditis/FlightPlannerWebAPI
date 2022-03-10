@@ -1,12 +1,15 @@
+using FlightPlanner.Core.Services;
+using FlightPlanner.Data;
+using FlightPlannerWebAPI.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using FlightPlanner.Handlers;
 using FlightPlannerWebAPI.Storage;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner
 {
@@ -29,7 +32,18 @@ namespace FlightPlanner
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlightPlannerWebAPI", Version = "v1" });
             });
 
-            services.AddDbContext<FlightPlannerDbContext>(ServiceLifetime.Scoped);
+            // services.AddDbContext<FlightPlannerDbContext>(ServiceLifetime.Scoped);
+
+            services.AddDbContext<FlightPlannerDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("flight-planner"));
+            });
+
+            services.AddTransient<IFlightPlannerDbContext, FlightPlannerDbContext>();
+            services.AddTransient<IDbService, IDbService>();
+           // services.AddTransient<IEntityService<>, IEntityService<>>();
+
+
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
