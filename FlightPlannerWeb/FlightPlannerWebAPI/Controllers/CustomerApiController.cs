@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FlightPlanner.Data;
 using FlightPlanner.Models;
 using FlightPlannerWebAPI.Storage;
 using Microsoft.AspNetCore.Cors;
@@ -37,7 +38,7 @@ namespace FlightPlannerWebAPI.Controllers
             if (FlightStorage.InvalidFlightValues(search))
                 return BadRequest();
 
-            return Ok(FlightStorage.SearchFlight(search, _context));
+            return Ok(); //FlightStorage.SearchFlight(search, _context)
         }
 
         [HttpGet]

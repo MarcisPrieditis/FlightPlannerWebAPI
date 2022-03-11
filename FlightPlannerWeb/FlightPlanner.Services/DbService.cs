@@ -9,9 +9,9 @@ namespace FlightPlanner.Services
 {
     public class DbService : IDbService
     {
-        protected readonly FlightPlannerDbContext _context;
+        protected readonly IFlightPlannerDbContext _context;
 
-        public DbService(FlightPlannerDbContext context)
+        public DbService(IFlightPlannerDbContext context)
         {
             _context = context;
         }

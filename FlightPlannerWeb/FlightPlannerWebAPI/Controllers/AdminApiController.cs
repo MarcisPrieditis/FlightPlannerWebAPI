@@ -15,10 +15,10 @@ namespace FlightPlannerWebAPI.Controllers
     [ApiController]
     public class AdminApiController : ControllerBase
     {
-        private readonly FlightPlannerDbContext _context;
+        private readonly IFlightPlannerDbContext _context;
         private static readonly object _locker = new object();
 
-        public AdminApiController(FlightPlannerDbContext context)
+        public AdminApiController(IFlightPlannerDbContext context)
         {
             _context = context;
         }
