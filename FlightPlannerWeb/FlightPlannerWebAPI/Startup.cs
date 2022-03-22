@@ -2,6 +2,7 @@ using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Data;
 using FlightPlanner.Models;
+using FlightPlanner.Services;
 using FlightPlannerWebAPI.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,9 +43,9 @@ namespace FlightPlanner
             });
 
             services.AddTransient<IFlightPlannerDbContext, FlightPlannerDbContext>();
-            services.AddTransient<IDbService, IDbService>();
-            services.AddTransient<IEntityService<Flight>, IEntityService<Flight>>();
-            services.AddTransient<IEntityService<Airport>, IEntityService<Airport>>();
+            services.AddTransient<IDbService, DbService>();
+            services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
+            services.AddTransient<IEntityService<Airport>, EntityService<Airport>>();
 
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>

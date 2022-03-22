@@ -73,18 +73,18 @@ namespace FlightPlannerWebAPI.Storage
             }
         }
 
-        //public static PageResult SearchFlight(SearchFlightRequest request, FlightPlannerDbContext context)
-        //{
-        //    lock (_locker)
-        //    {
-        //        var search = context.Flights.Where(f =>
-        //            f.From.AirportName.ToLower().Trim() == request.From.ToLower().Trim() &&
-        //            f.To.AirportName.ToLower().Trim() == request.To.ToLower().Trim() &&
-        //            f.DepartureTime.Substring(0, 10) == request.DepartureDate).ToList();
+        public static PageResult SearchFlight(SearchFlightRequest request, FlightPlannerDbContext context)
+        {
+            lock (_locker)
+            {
+                var search = context.Flights.Where(f =>
+                    f.From.AirportName.ToLower().Trim() == request.From.ToLower().Trim() &&
+                    f.To.AirportName.ToLower().Trim() == request.To.ToLower().Trim() &&
+                    f.DepartureTime.Substring(0, 10) == request.DepartureDate).ToList();
 
-        //        return new PageResult(search);
-        //    }
-        //}
+                return new PageResult(search);
+            }
+        }
     }
 }
 
